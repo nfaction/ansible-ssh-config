@@ -1,0 +1,101 @@
+---
+###################
+# Gather OS Facts #
+###################
+- name: gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+  tags:
+    - vars
+    - install
+
+- name: gather other os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ os_vars_dir }}/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ os_vars_dir }}/{{ ansible_distribution }}.yml"
+    - "{{ os_vars_dir }}/{{ ansible_os_family }}.yml"
+  tags:
+    - vars
+    - install
+
+#######################
+# Install OS Packages #
+#######################
+- name: install ssh server
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ ssh_packages | default([]) }}"
+  tags:
+    - install
+
+#################
+# Configure SSH #
+#################
+- name: copy motd.ssh
+  template:
+    src: motd.ssh.j2
+    dest: /etc/motd.ssh
+    mode: 0444
+  tags:
+    - copy-motd
+
+- name: configure ssh
+  template:
+    src: "{{ item }}"
+    dest: "{{ ssh_config }}"
+    backup: yes
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.sshd_config.j2"
+    - "{{ ansible_distribution }}.sshd_config.j2"
+  notify: start ssh service
+  tags:
+    - template-sshd-config
+
+######################
+# Configure SSH Keys #
+######################
+- name: make sure ssh directory exists
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode | default('0700') }}"
+  with_items:
+    - "{{ user_ssh_dirs | default([]) }}"
+  tags:
+    - create-root-ssh-dir
+
+- name: manage ssh keys authorized_keys
+  authorized_key:
+    user: "{{ item.user }}"
+    key: "{{ item.key }}"
+    key_options: "{{ item.key_options | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    comment: "{{ item.comment | default(omit) }}"
+    follow: "{{ item.follow | default(omit) }}"
+    exclusive: "{{ item.exclusive | default(omit) }}"
+    manage_dir: "{{ item.manage_dir | default(omit) }}"
+    path: "{{ item.path | default(omit) }}"
+    validate_certs: "{{ item.validate_certs | default(omit) }}"
+  with_items:
+    - "{{ ssh_keys | default([]) }}"
+  tags:
+    - ssh-keys
+
+###################
+# SELinux Changes #
+###################
+- name: Allow Apache to listen on tcp port 8888
+  seport:
+    ports: "{{ ssh_port }}"
+    proto: tcp
+    setype: ssh_port_t
+    state: present
+    reload: true
+  when:
+    - ansible_os_family == "RedHat"
+  notify: restart ssh service

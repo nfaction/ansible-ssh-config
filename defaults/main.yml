@@ -1,0 +1,9 @@
+---
+
+ssh_port: 22
+
+ssh_config: /etc/ssh/sshd_config
+
+ssh_allow_groups:
+  - root
+  - users
