@@ -7,7 +7,7 @@ env:
     - ROLE_NAME: ansible-ssh-config
   matrix:
     # Test defaults.
-    - MOLECULE_DISTRO: centos7
+    # - MOLECULE_DISTRO: centos7
     # - MOLECULE_DISTRO: ubuntu1804
     # - MOLECULE_DISTRO: ubuntu1804
     # - MOLECULE_DISTRO: ubuntu1604
