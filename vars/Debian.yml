@@ -3,6 +3,7 @@
 ssh_port: 22
 
 ssh_packages:
+  - python-apt
   - openssh-server
 
 ssh_service: ssh

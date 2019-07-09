@@ -1,0 +1,16 @@
+---
+
+ssh_port: 22
+
+ssh_packages:
+  - openssh-server
+
+ssh_service: sshd
+
+ssh_config: /etc/ssh/sshd_config
+
+user_ssh_dirs:
+  - name: root
+    path: /root/.ssh
+
+ssh_keys: []
