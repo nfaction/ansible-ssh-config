@@ -4,6 +4,14 @@ ssh_port: 22
 
 ssh_config: /etc/ssh/sshd_config
 
+user_ssh_dirs:
+  - name: root
+    path: /root/.ssh
+
 ssh_allow_groups:
   - root
   - users
+
+ssh_keys: []
+
+selinux_enabled: false
