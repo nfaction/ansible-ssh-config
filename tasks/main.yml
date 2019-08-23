@@ -2,6 +2,12 @@
 ###################
 # Gather OS Facts #
 ###################
+- name: gather facts
+  setup:
+  tags:
+    - vars
+    - install
+
 - name: gather os specific variables
   include_vars: "{{ item }}"
   with_first_found:
