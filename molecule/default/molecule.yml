@@ -7,7 +7,7 @@ lint:
   name: yamllint
 platforms:
   - name: ssh-instance
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian9}-ansible:latest"
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian10}-ansible:${MOLECULE_TAG:-latest}"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
@@ -17,6 +17,20 @@ provisioner:
   name: ansible
   lint:
     name: ansible-lint
+scenario:
+  name: default
+  test_sequence:
+    - destroy
+    - dependency
+    - prepare
+    # - lint
+    - syntax
+    - create
+    - converge
+    - idempotence
+    - side_effect
+    # - verify
+    - destroy
 verifier:
   name: testinfra
   lint:

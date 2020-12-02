@@ -2,6 +2,5 @@
 - name: Converge
   hosts: all
   vars: []
-  # os_vars_dir: ../../../../group_vars/operating-systems
   roles:
     - role: ansible-ssh-config
