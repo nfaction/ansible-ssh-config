@@ -12,11 +12,11 @@ env:
     # - MOLECULE_DISTRO: ubuntu1804
     # - MOLECULE_DISTRO: ubuntu1604
     - MOLECULE_DISTRO: debian9
-    - MOLECULE_DISTRO: debian10
+    - MOLECULE_TAG: python2
 
 install:
   # Install test dependencies.
-  - pip install molecule==2.19 ansible==2.7.11 docker
+  - pip install molecule==2.19 ansible==2.10.3 docker
 
 before_script: []
 
