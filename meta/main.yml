@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: ssh_config
+  namespace: ansible
   author: Matthew DePorter
   description: Role to install and configure ssh
   company: Mobile-Tech LLC
