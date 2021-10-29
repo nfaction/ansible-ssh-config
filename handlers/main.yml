@@ -5,6 +5,8 @@
     name: "{{ ssh_service }}"
     state: started
     enabled: true
+  listen:
+  notify: "restart ssh service"
   tags:
     - start-ssh
 
@@ -13,5 +15,6 @@
     name: "{{ ssh_service }}"
     state: restarted
     enabled: true
+  listen: "restart ssh service"
   tags:
     - restart-ssh

@@ -46,6 +46,7 @@
     src: motd.ssh.j2
     dest: /etc/motd.ssh
     mode: 0444
+  notify: 'restart ssh service'
   tags:
     - copy-motd
 
@@ -57,7 +58,7 @@
   with_first_found:
     - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.sshd_config.j2"
     - "{{ ansible_distribution }}.sshd_config.j2"
-  notify: start ssh service
+  notify: 'restart ssh service'
   tags:
     - template-sshd-config
 
